@@ -1,37 +1,29 @@
 package services
 
+import handler.PersonHandler
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.stream.{ActorMaterializer, Materializer}
+import akka.pattern.ask
 import com.typesafe.config.{Config, ConfigFactory}
-import model.UserHandler
+import handler.PersonHandler.Register
+import inj.ApiModule
 
-import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
 case class Equipamento(serial: Long, nome: String)
 case class Usuario(nome: String, idade: Int, email: String)
 
-trait Service {
-  import scala.concurrent.duration._
-
-  implicit val system: ActorSystem
-  implicit val materializer: ActorMaterializer
-  implicit val ec: ExecutionContextExecutor
-
-  val config: Config
-  def userHandler: ActorRef
-}
-
-object AkkaHttpService extends App with Service {
+object AkkaHttpService extends App {
 
   implicit val system = ActorSystem()
   implicit val ec = system.dispatcher
   implicit val materializer = ActorMaterializer()
 
+  val module = ApiModule()
   val config = ConfigFactory.load()
-  val userHandler = system.actorOf(UserHandler.props(prodDb))
+  val personHandler = system.actorOf(PersonHandler.props(module))
 
   val route =
     path("api") {
