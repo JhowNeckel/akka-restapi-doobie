@@ -9,7 +9,7 @@ import management.RestInterface
 
 import scala.concurrent.duration._
 
-object Test extends App with RestInterface {
+object WebServer extends App with RestInterface {
   val config = ConfigFactory.load()
 
   val host = config.getString("http.interface")
