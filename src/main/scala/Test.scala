@@ -1,6 +1,5 @@
-package services
+package main
 
-import scala.concurrent.duration._
 import akka.actor._
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
@@ -8,12 +7,15 @@ import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 import management.RestInterface
 
+import scala.concurrent.duration._
+
 object Test extends App with RestInterface {
   val config = ConfigFactory.load()
-  val host = "localhost"
-  val port = 9000
 
-  implicit val system = ActorSystem("quiz-management-service")
+  val host = config.getString("http.interface")
+  val port = config.getInt("http.port")
+
+  implicit val system = ActorSystem("api")
   implicit val materializer = ActorMaterializer()
 
   implicit val executionContext = system.dispatcher
