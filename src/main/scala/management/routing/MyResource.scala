@@ -30,5 +30,4 @@ trait MyResource extends Directives with JsonSupport {
     onSuccess(resource) {
       case Some(t) => complete(ToResponseMarshallable(t))
     }
-
 }

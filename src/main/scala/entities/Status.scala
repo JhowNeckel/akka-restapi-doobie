@@ -1,3 +1,3 @@
 package entities
 
-case class Status(code: Int)
+case class Status(rowsaffected: Int)

@@ -1,11 +1,10 @@
 package services
 
-import doobie.util.fragment.Fragment
 import scala.concurrent.Future
 
-trait Service [S, T] {
-  def select(sql: Fragment): Future[Option[T]]
-  def list(sql: Fragment): Future[Option[List[T]]]
-  def upsert(sql: Fragment): Future[Option[Int]]
-  def remove(sql: Fragment): Future[Option[Int]]
+trait Service [PK, T] {
+  def select(pk: PK): Future[Option[Either[String, T]]] = Future successful None
+  def list: Future[Option[Either[List[T], List[T]]]] = Future successful None
+  def upsert(e: T): Future[Int]
+  def remove(pk: PK): Future[Int]
 }

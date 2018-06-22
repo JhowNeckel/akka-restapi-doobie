@@ -5,7 +5,11 @@ import util.StringUtils._
 trait StatementGenerator[A] {
   def select(table: String): String
 
+  def selectById(table: String, pk: Long): String
+
   def insert(table: String): String
+
+  def remove(table: String, pk: Long): String
 
   def parsert(entity: A): Map[String, Any]
 }
@@ -18,7 +22,12 @@ object StatementGenerator {
 
     override def select(table: String): String = {
       val fields = fieldLister.list.map(uperCamelToLowerSnake).mkString(",")
-      s"SELECT $fields FROM $table"
+      s"select $fields from $table"
+    }
+
+    def selectById(table: String, pk: Long): String = {
+      val fields = fieldLister.list.map(uperCamelToLowerSnake).mkString(",")
+      s"select $fields from $table where id = $pk"
     }
 
     override def insert(table: String): String = {
@@ -27,7 +36,11 @@ object StatementGenerator {
 
       val placeholders = List.fill(fieldNames.size)("?").mkString(",")
 
-      s"INSERT INTO $table($fields) VALUES ($placeholders)"
+      s"insert into $table($fields) values ($placeholders)"
+    }
+
+    override def remove(table: String, pk: Long): String = {
+      s"delete from $table where id = $pk"
     }
 
     override def parsert(entity: A): Map[String, Any] = fieldLister.map(entity)
