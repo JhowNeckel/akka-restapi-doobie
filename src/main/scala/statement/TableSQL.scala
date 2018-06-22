@@ -1,10 +1,12 @@
 package statement
 
-trait TableSQL[A] {
+import scala.reflect.ClassTag
+
+abstract class TableSQL[A: ClassTag]()(implicit st: StatementGenerator[A]) {
   val tableName: String
 
-  lazy val insertEntitySQL = StatementGenerator[A].insert(tableName)
-  lazy val listEntitySQL = StatementGenerator[A].select(tableName)
-  lazy val selectEntitySQL = (pk: Long) => StatementGenerator[A].selectById(tableName, pk)
-  lazy val removeEntitySQL = (pk: Long) => StatementGenerator[A].remove(tableName, pk)
+  lazy val insertEntitySQL = st.insert(tableName)
+  lazy val listEntitySQL = st.select(tableName)
+  lazy val selectEntitySQL = (pk: Long) => st.selectById(tableName, pk)
+  lazy val removeEntitySQL = (pk: Long) => st.remove(tableName, pk)
 }
