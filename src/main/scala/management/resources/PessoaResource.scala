@@ -15,7 +15,7 @@ trait PessoaResource extends MyResource with JsonSupport {
       post {
         entity(as[Pessoa]) { pessoa =>
           val result = for {
-            result <- pessoaService.upsert(pessoa)
+            result <- pessoaService.insert(pessoa)
           } yield Status(result)
           complete(result)
         }

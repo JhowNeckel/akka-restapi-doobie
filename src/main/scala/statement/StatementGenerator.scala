@@ -7,6 +7,8 @@ trait StatementGenerator[A] {
 
   def selectById(table: String, pk: Long): String
 
+  def update(table: String, pk: Long): String
+
   def insert(table: String): String
 
   def remove(table: String, pk: Long): String
@@ -25,9 +27,17 @@ object StatementGenerator {
       s"select $fields from $table"
     }
 
-    def selectById(table: String, pk: Long): String = {
+    override def selectById(table: String, pk: Long): String = {
       val fields = fieldLister.list.map(uperCamelToLowerSnake).mkString(",")
       s"select $fields from $table where id = $pk"
+    }
+
+    override def update(table: String, pk: Long): String = {
+      val fieldNames = fieldLister.list.map(uperCamelToLowerSnake)
+      val placeholders = List.fill(fieldNames.size)("?").mkString(",")
+      val fields = (fieldNames zip placeholders).map(x => s"${x._1} = ${x._2}").mkString(",")
+
+      s"update $table set $fields where id = $pk"
     }
 
     override def insert(table: String): String = {

@@ -30,8 +30,12 @@ class PessoaService(implicit xa: Transactor[IO], ec: ExecutionContext) extends T
     } yield Option(result)
   }
 
-  override def upsert(e: Pessoa): Future[Int] = {
+  override def insert(e: Pessoa): Future[Int] = {
     Update[Pessoa](insertEntitySQL).run(e).transact(xa).unsafeToFuture()
+  }
+
+  override def update(e: Pessoa, pk: Long): Future[Int] = {
+    Update[Pessoa](updateEntitySQL(pk)).run(e).transact(xa).unsafeToFuture()
   }
 
   override def remove(pk: Long): Future[Int] = {
