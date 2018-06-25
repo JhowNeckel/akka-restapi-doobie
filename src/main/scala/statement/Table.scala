@@ -1,8 +1,6 @@
 package statement
 
-import scala.reflect.ClassTag
-
-abstract class TableSQL[A: ClassTag]()(implicit st: StatementGenerator[A]) {
+abstract class Table[A](implicit st: StatementGenerator[A]) {
   val tableName: String
 
   lazy val insertEntitySQL = st.insert(tableName)

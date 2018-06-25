@@ -6,11 +6,11 @@ import doobie.implicits._
 import doobie.util.query.Query0
 import doobie.util.transactor.Transactor
 import entities.Pessoa
-import statement.TableSQL
+import statement.Table
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PessoaService(implicit xa: Transactor[IO], ec: ExecutionContext) extends TableSQL[Pessoa] with Service[Long, Pessoa] {
+class PessoaService(implicit xa: Transactor[IO], ec: ExecutionContext) extends Table[Pessoa] with Service[Long, Pessoa] {
 
   override val tableName: String = "pessoa"
 
